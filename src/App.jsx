@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import QuizPage from "./pages/QuizPage";
 import DashboardPage from "./pages/DashboardPage";
 import CollegesPage from "./pages/CollegesPage";
 import LoginPage from "./pages/LoginPage";
@@ -29,7 +28,6 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
         <Route path="/" element={<HomePage />} />
-        <Route path="/quiz" element={<QuizPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/colleges" element={<CollegesPage />} />
         <Route path="/profile" element={<ProfilePage />} />
