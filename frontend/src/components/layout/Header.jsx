@@ -1,72 +1,83 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaGraduationCap } from "react-icons/fa";
+import { assets } from "../../assets/assets";
 
-const Header = ({ isLoggedIn, user, onLogout }) => {
+const Header = ({ user, onLogout }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   return (
-    <header className="bg-white shadow-md w-full sticky top-0 z-50">
-      <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Brand/Logo */}
+    <header className="bg-white/5 backdrop-blur-xl shadow-md w-full sticky top-0 z-50">
+      <nav className="container mx-auto px-6 flex justify-between items-center">
         <Link to="/" className="flex items-center space-x-2">
-          <FaGraduationCap className="h-8 w-8 text-blue-600" />
-          <span className="text-2xl font-bold text-gray-800">
-            CareerConnect
-          </span>
+          <img src={assets.logo1} alt="" className="w-40" />
         </Link>
 
-        {/* Navigation Links */}
         <div className="hidden md:flex items-center space-x-8">
           <Link
             to="/"
-            className="text-gray-600 hover:text-blue-600 transition-colors duration-300"
+            className="text-black hover:text-yellow-600 transition-colors duration-300"
           >
             Home
           </Link>
           <Link
-            to="/assessment" // 👈 Add this link
-            className="text-gray-600 hover:text-blue-600 transition-colors duration-300"
+            to="/assessment"
+            className="text-black hover:text-yellow-600 transition-colors duration-300"
           >
             Assessment
           </Link>
           <Link
             to="/colleges"
-            className="text-gray-600 hover:text-blue-600 transition-colors duration-300"
+            className="text-black hover:text-yellow-600 transition-colors duration-300"
           >
             Colleges
           </Link>
           <Link
             to="/about"
-            className="text-gray-600 hover:text-blue-600 transition-colors duration-300"
+            className="text-black hover:text-yellow-600 transition-colors duration-300"
           >
             About
           </Link>
         </div>
 
-        {/* 👉 Conditional Rendering for Login/Profile */}
         <div className="flex items-center space-x-4">
-          {isLoggedIn && user ? (
-            // --- SHOW USER PROFILE IF LOGGED IN ---
-            <div className="flex items-center space-x-4">
-              <Link to="/profile">
+          {user ? (
+            <div className="relative">
+              <button onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
                 <img
-                  src={user.photoURL}
-                  alt={user.name}
-                  className="h-10 w-10 rounded-full object-cover border-2 border-blue-500"
+                  src={
+                    user.photoURL ||
+                    `https://ui-avatars.com/api/?name=${
+                      user.email || user.phoneNumber
+                    }&background=random`
+                  }
+                  alt="User avatar"
+                  className="h-10 w-10 rounded-full object-cover border-2 border-yellow-500"
                 />
-              </Link>
-              <Link to="/login">
-                <button
-                  onClick={onLogout}
-                  className="bg-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-full hover:bg-gray-300 transition-colors"
-                >
-                  Logout
-                </button>
-              </Link>
+              </button>
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20">
+                  <Link
+                    to="/profile"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    onClick={() => setIsDropdownOpen(false)}
+                  >
+                    Profile
+                  </Link>
+                  <button
+                    onClick={() => {
+                      onLogout();
+                      setIsDropdownOpen(false);
+                    }}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
-            // --- SHOW LOGIN BUTTON IF LOGGED OUT -
             <Link to="/login">
-              <button className="bg-blue-600 text-white font-semibold px-5 py-2 rounded-full hover:bg-blue-700 transition-colors duration-300">
+              <button className="bg-yellow-600 text-white font-semibold px-5 py-2 rounded-full hover:bg-yellow-700 transition-colors duration-300">
                 Login
               </button>
             </Link>
