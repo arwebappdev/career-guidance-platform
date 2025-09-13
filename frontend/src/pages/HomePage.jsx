@@ -20,7 +20,7 @@ const HomePage = () => {
           </p>
           <div className="mt-8">
             <Link
-              to="/quiz"
+              to="/assessment"
               className="inline-flex items-center justify-center bg-blue-600 text-white font-bold text-lg px-8 py-4 rounded-full hover:bg-blue-700 transition-transform duration-300 transform hover:scale-105 shadow-lg"
             >
               Take the Free Aptitude Quiz

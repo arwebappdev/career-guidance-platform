@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import QuizPage from "./pages/QuizPage";
 import DashboardPage from "./pages/DashboardPage";
 import CollegesPage from "./pages/CollegesPage";
 import LoginPage from "./pages/LoginPage";
@@ -10,8 +9,9 @@ import AssessmentPage from "./pages/AssessmentPage";
 import Header from "./components/layout/Header";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Default to not logged in
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation(); // Get the current location
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -23,13 +23,15 @@ function App() {
     navigate("/login");
   };
 
+  // Only show the header if the path is not '/login'
+  const showHeader = location.pathname !== "/login";
+
   return (
     <>
-      <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />
+      {showHeader && <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />}
       <Routes>
         <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
         <Route path="/" element={<HomePage />} />
-        <Route path="/quiz" element={<QuizPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/colleges" element={<CollegesPage />} />
         <Route path="/profile" element={<ProfilePage />} />
