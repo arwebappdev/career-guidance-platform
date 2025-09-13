@@ -1,9 +1,8 @@
 import image from './WularLake.png';
-import logo from './logo1.svg';
-import poster from './poster.png';
+import logo from './logop.svg';
+
 
 export const assets = {
     image,  
     logo,
-    poster,
 }
