@@ -1,13 +1,18 @@
-import React, { useState, useEffect } from "react";
-import Header from "../components/layout/Header";
+import React, { useState, useEffect, useRef } from "react";
 import Footer from "../components/layout/Footer";
 import CollegeCard from "../components/dashboard/CollegeCard";
 import { mockCollegesData } from "../data/mockCollegesData";
 import { FaSearch } from "react-icons/fa";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const CollegesPage = () => {
   const [colleges, setColleges] = useState(mockCollegesData);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const main = useRef(null); // A ref for the main container for context
 
   useEffect(() => {
     const filtered = mockCollegesData.filter(
@@ -18,36 +23,104 @@ const CollegesPage = () => {
     setColleges(filtered);
   }, [searchTerm]);
 
+  useEffect(() => {
+    // 1. Create a GSAP context
+    const ctx = gsap.context(() => {
+      // All GSAP code goes inside here
+
+      // Hero Section Animation
+      gsap.from(".hero-anim", {
+        y: -50,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+      });
+
+      // Search bar animation
+      gsap.from(".search-anim", {
+        y: 30,
+        opacity: 0,
+        delay: 0.5,
+        duration: 1,
+        ease: "power3.out",
+      });
+
+      // Cards animation on scroll
+      gsap.from(".card-anim", {
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.2, // Use stagger for a cleaner effect than manual delay
+        scrollTrigger: {
+          trigger: ".card-grid-anim", // Trigger based on the grid container
+          start: "top 80%",
+        },
+        ease: "power3.out",
+      });
+    }, main); // 2. Scope the context to our main component element
+
+    // 3. Return a cleanup function
+    return () => ctx.revert(); // This will clean up all animations and ScrollTriggers when the component re-renders
+  }, [colleges]); // The dependency array is correct, we just needed the cleanup
+
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      <main className="flex-grow container mx-auto p-6">
-        <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-gray-800">Explore Colleges</h1>
-          <p className="text-gray-600 mt-2">
-            Find the right government college for you in Madhya Pradesh.
+    // Add the ref and a class to the main container
+    <div
+      ref={main}
+      className="flex flex-col min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50"
+    >
+      <main className="flex-grow container mx-auto px-6 py-12">
+        {/* Add a class for GSAP to target */}
+        <div className="hero-anim text-center mb-16">
+          <h1 className="text-5xl md:text-6xl font-extrabold text-gray-800 drop-shadow-md">
+            🎓 Explore <span className="text-indigo-600">Colleges</span>
+          </h1>
+          <p className="text-gray-600 mt-6 max-w-2xl mx-auto text-lg">
+            Find the best government colleges across{" "}
+            <span className="font-semibold text-indigo-600">
+              Madhya Pradesh
+            </span>{" "}
+            and explore popular courses.
           </p>
         </div>
 
-        {/* Search Bar */}
-        <div className="relative mb-8 max-w-lg mx-auto">
+        {/* Add a class for GSAP to target */}
+        <div className="search-anim relative mb-14 max-w-xl mx-auto">
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search by college name or city..."
-            className="w-full p-4 pl-12 text-lg border border-gray-300 rounded-full shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="w-full p-4 pl-14 text-lg border border-gray-300 rounded-2xl shadow-md focus:ring-4 focus:ring-indigo-400 focus:outline-none transition-all"
           />
-          <FaSearch className="absolute top-1/2 left-4 -translate-y-1/2 text-gray-400" />
+          <FaSearch className="absolute top-1/2 left-5 -translate-y-1/2 text-gray-400 text-lg" />
         </div>
 
-        {/* College Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Add a class for GSAP to target */}
+        <div
+          className="
+    card-grid-anim 
+    grid 
+    grid-cols-1 
+    sm:grid-cols-2 
+    md:grid-cols-2 
+    lg:grid-cols-2 
+    xl:grid-cols-3 
+    2xl:grid-cols-4
+    gap-6 
+    sm:gap-8 
+    lg:gap-10
+    place-items-center
+  "
+        >
           {colleges.length > 0 ? (
             colleges.map((college) => (
-              <CollegeCard key={college.id} college={college} />
+              <div key={college.id} className="card-anim w-full max-w-sm">
+                <CollegeCard college={college} />
+              </div>
             ))
           ) : (
-            <p className="text-center text-gray-500 col-span-full">
+            <p className="text-center text-gray-500 col-span-full text-lg">
               No colleges found matching your search.
             </p>
           )}
