@@ -49,7 +49,7 @@ const CollegeCard = ({ college }) => {
             {college.name}
           </h3>
           <div className="flex items-center text-gray-200 mt-1 text-sm">
-            <FaMapMarkerAlt className="mr-2 text-indigo-400" />
+            <FaMapMarkerAlt className="mr-2 text-yellow-600" />
             <span>{college.location}</span>
           </div>
         </div>
@@ -58,20 +58,20 @@ const CollegeCard = ({ college }) => {
       {/* Content */}
       <div className="p-6">
         <h4 className="font-semibold text-gray-700 mb-4 flex items-center text-lg">
-          <FaBook className="mr-2 text-indigo-600" /> Popular Courses
+          <FaBook className="mr-2 text-yellow-600" /> Popular Courses
         </h4>
         <div className="space-y-3">
           {college.courses.slice(0, 3).map((course, index) => (
             <div
               key={index}
-              className="flex justify-between items-center text-sm bg-gray-50 p-2 rounded-lg hover:bg-indigo-50 transition-all"
+              className="flex justify-between items-center text-sm bg-gray-50 p-2 rounded-lg hover:bg-yellow-50 transition-all"
             >
               <p className="text-gray-700 font-medium">{course.name}</p>
               <div className="flex items-center">
                 <span
                   className={`text-xs font-semibold px-2 py-1 rounded-full ${
                     course.level === "UG"
-                      ? "bg-blue-100 text-blue-700"
+                      ? "bg-blue-100 text-yellow-700"
                       : "bg-green-100 text-green-700"
                   }`}
                 >
@@ -87,7 +87,7 @@ const CollegeCard = ({ college }) => {
           ))}
         </div>
 
-        <button className="w-full mt-6 bg-indigo-600 text-white font-bold py-3 px-5 rounded-xl hover:bg-indigo-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-400 focus:ring-opacity-50">
+        <button className="w-full mt-6 bg-yellow-600 text-white font-bold py-3 px-5 rounded-xl hover:bg-yellow-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-50">
           Explore College
         </button>
       </div>

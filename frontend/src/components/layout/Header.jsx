@@ -12,7 +12,7 @@ const Header = ({ user, onLogout }) => {
           <img src={assets.logo1} alt="" className="w-40" />
         </Link>
 
-        <div className="hidden md:flex items-center space-x-8">
+        <div className="hidden md:flex font-semibold items-center space-x-8">
           <Link
             to="/"
             className="text-black hover:text-yellow-600 transition-colors duration-300"

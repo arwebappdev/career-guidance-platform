@@ -67,17 +67,17 @@ const CollegesPage = () => {
     // Add the ref and a class to the main container
     <div
       ref={main}
-      className="flex flex-col min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50"
+      className="flex flex-col min-h-screen bg-gradient-to-br from-gray-50 via-white to-yellow-50"
     >
       <main className="flex-grow container mx-auto px-6 py-12">
         {/* Add a class for GSAP to target */}
         <div className="hero-anim text-center mb-16">
           <h1 className="text-5xl md:text-6xl font-extrabold text-gray-800 drop-shadow-md">
-            🎓 Explore <span className="text-indigo-600">Colleges</span>
+            🎓 Explore <span className="text-yellow-600">Colleges</span>
           </h1>
           <p className="text-gray-600 mt-6 max-w-2xl mx-auto text-lg">
             Find the best government colleges across{" "}
-            <span className="font-semibold text-indigo-600">
+            <span className="font-semibold text-yellow-600">
               Madhya Pradesh
             </span>{" "}
             and explore popular courses.
@@ -91,7 +91,7 @@ const CollegesPage = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search by college name or city..."
-            className="w-full p-4 pl-14 text-lg border border-gray-300 rounded-2xl shadow-md focus:ring-4 focus:ring-indigo-400 focus:outline-none transition-all"
+            className="w-full p-4 pl-14 text-lg border border-gray-300 rounded-2xl shadow-md focus:ring-4 focus:ring-yellow-600 focus:outline-none transition-all"
           />
           <FaSearch className="absolute top-1/2 left-5 -translate-y-1/2 text-gray-400 text-lg" />
         </div>
