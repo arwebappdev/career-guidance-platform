@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase";
 import {
   assessmentQuestions10th,
   assessmentQuestions12th,
@@ -6,7 +8,7 @@ import {
 } from "../data/assessmentData";
 import { analyzeAssessment } from "../utils/assessmentAnalysis";
 import Chart from "chart.js/auto";
-import CollegeCard from "../components/dashboard/CollegeCard"; // Import CollegeCard
+import CollegeCard from "../components/dashboard/CollegeCard";
 
 const AssessmentPage = () => {
   const [userType, setUserType] = useState(null);
@@ -21,6 +23,19 @@ const AssessmentPage = () => {
 
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (!user) {
+      navigate("/login");
+    } else {
+      const userProfile = localStorage.getItem(`userProfile_${user.uid}`);
+      if (!userProfile) {
+        navigate("/profile");
+      }
+    }
+  }, [navigate]);
 
   const categoryOrder = assessmentQuestions
     ? Object.keys(assessmentQuestions)
