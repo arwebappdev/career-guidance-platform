@@ -1,10 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
-import { assessmentQuestions } from "../data/assessmentData";
+import {
+  assessmentQuestions10th,
+  assessmentQuestions12th,
+  assessmentQuestionsUG,
+} from "../data/assessmentData";
 import { analyzeAssessment } from "../utils/assessmentAnalysis";
 import Chart from "chart.js/auto";
+import CollegeCard from "../components/dashboard/CollegeCard"; // Import CollegeCard
 
 const AssessmentPage = () => {
   const [userType, setUserType] = useState(null);
+  const [assessmentQuestions, setAssessmentQuestions] = useState(null);
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -16,10 +22,12 @@ const AssessmentPage = () => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
-  const categoryOrder = Object.keys(assessmentQuestions);
+  const categoryOrder = assessmentQuestions
+    ? Object.keys(assessmentQuestions)
+    : [];
 
   useEffect(() => {
-    if (showResults && results) {
+    if (showResults && results && results.interim_reports) {
       const ctx = chartRef.current.getContext("2d");
       if (chartInstance.current) {
         chartInstance.current.destroy();
@@ -48,10 +56,9 @@ const AssessmentPage = () => {
           scales: {
             r: {
               angleLines: {
-                display: false,
+                display: true,
               },
               suggestedMin: 0,
-              suggestedMax: 100,
             },
           },
         },
@@ -61,6 +68,13 @@ const AssessmentPage = () => {
 
   const handleUserTypeSelect = (type) => {
     setUserType(type);
+    if (type === "10th") {
+      setAssessmentQuestions(assessmentQuestions10th);
+    } else if (type === "12th") {
+      setAssessmentQuestions(assessmentQuestions12th);
+    } else if (type === "ug") {
+      setAssessmentQuestions(assessmentQuestionsUG);
+    }
     setShowIntro(true);
   };
 
@@ -89,7 +103,11 @@ const AssessmentPage = () => {
       setCurrentCategoryIndex(currentCategoryIndex + 1);
       setCurrentQuestionIndex(0);
     } else {
-      const finalResults = analyzeAssessment(answers, userType);
+      const finalResults = analyzeAssessment(
+        answers,
+        userType,
+        assessmentQuestions
+      );
       setResults(finalResults);
       setShowResults(true);
       setShowAssessment(false);
@@ -98,6 +116,7 @@ const AssessmentPage = () => {
 
   const handleReset = () => {
     setUserType(null);
+    setAssessmentQuestions(null);
     setShowIntro(false);
     setShowAssessment(false);
     setShowResults(false);
@@ -127,10 +146,13 @@ const AssessmentPage = () => {
               >
                 <input
                   type="radio"
-                  name="answer"
+                  name={`question-${currentCategoryIndex}-${currentQuestionIndex}`}
                   value={option}
                   className="mr-2"
                   onChange={() => handleAnswer(option)}
+                  checked={
+                    answers[currentCategory]?.[currentQuestionIndex] === option
+                  }
                 />
                 {option}
               </label>
@@ -141,12 +163,13 @@ const AssessmentPage = () => {
                 type="range"
                 min={question.min}
                 max={question.max}
-                defaultValue="5"
+                value={answers[currentCategory]?.[currentQuestionIndex] || "5"}
                 className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                 onChange={(e) => handleAnswer(e.target.value)}
               />
               <div className="flex justify-between w-full text-sm text-gray-500 mt-2">
                 <span>{question.label.split(" to ")[0]}</span>
+                <span>{answers[currentCategory]?.[currentQuestionIndex]}</span>
                 <span>{question.label.split(" to ")[1]}</span>
               </div>
             </div>
@@ -156,16 +179,20 @@ const AssessmentPage = () => {
     );
   };
 
-  const totalQuestions = categoryOrder.reduce(
-    (acc, category) => acc + assessmentQuestions[category].length,
-    0
-  );
-  const answeredQuestions = categoryOrder.reduce((acc, category) => {
-    const categoryAnswers = answers[category]
-      ? Object.keys(answers[category]).length
-      : 0;
-    return acc + categoryAnswers;
-  }, 0);
+  const totalQuestions =
+    assessmentQuestions &&
+    categoryOrder.reduce(
+      (acc, category) => acc + assessmentQuestions[category].length,
+      0
+    );
+  const answeredQuestions =
+    assessmentQuestions &&
+    categoryOrder.reduce((acc, category) => {
+      const categoryAnswers = answers[category]
+        ? Object.keys(answers[category]).length
+        : 0;
+      return acc + categoryAnswers;
+    }, 0);
   const progress =
     totalQuestions > 0 ? (answeredQuestions / totalQuestions) * 100 : 0;
 
@@ -180,23 +207,30 @@ const AssessmentPage = () => {
 
         {!userType && (
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-800">Who are you?</h2>
+            <h2 className="text-2xl font-bold text-gray-800">
+              What is your current educational status?
+            </h2>
             <p className="text-gray-500 mt-2">
-              Let us know if you're a school student or a college student so we
-              can provide the best advice for you.
+              This will help us tailor the recommendations for you.
             </p>
             <div className="mt-8 space-y-4">
               <button
-                onClick={() => handleUserTypeSelect("student")}
+                onClick={() => handleUserTypeSelect("10th")}
                 className="w-full px-8 py-4 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-600 transition-colors"
               >
-                I am a School Student
+                10th Class
               </button>
               <button
-                onClick={() => handleUserTypeSelect("college")}
+                onClick={() => handleUserTypeSelect("12th")}
                 className="w-full px-8 py-4 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-600 transition-colors"
               >
-                I am a College Student
+                12th Class
+              </button>
+              <button
+                onClick={() => handleUserTypeSelect("ug")}
+                className="w-full px-8 py-4 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-600 transition-colors"
+              >
+                Undergraduate
               </button>
             </div>
           </div>
@@ -290,39 +324,78 @@ const AssessmentPage = () => {
                   )}
                 </ul>
               </div>
-              {userType === "student" ? (
-                <div className="p-6 bg-blue-50 rounded-lg border border-blue-200 text-blue-800">
-                  <h3 className="text-xl font-semibold mb-2">
-                    Recommended Academic Streams
-                  </h3>
-                  <ul className="list-disc list-inside space-y-1">
-                    {results.final_report.academic_streams.map(
-                      (stream, index) => (
-                        <li key={index}>{stream}</li>
-                      )
-                    )}
-                  </ul>
-                </div>
-              ) : (
-                <div className="p-6 bg-blue-50 rounded-lg border border-blue-200 text-blue-800">
-                  <h3 className="text-xl font-semibold mb-2">
-                    Recommended Career Paths
-                  </h3>
-                  <ul className="list-disc list-inside space-y-1">
-                    {results.final_report.career_recommendations.map(
-                      (path, index) => (
-                        <li key={index}>{path}</li>
-                      )
-                    )}
-                  </ul>
-                </div>
-              )}
+              {(userType === "10th" || userType === "12th") &&
+                results.final_report.academic_streams && (
+                  <div className="p-6 bg-blue-50 rounded-lg border border-blue-200 text-blue-800">
+                    <h3 className="text-xl font-semibold mb-2">
+                      Recommended Academic Streams
+                    </h3>
+                    <ul className="list-disc list-inside space-y-1">
+                      {results.final_report.academic_streams.map(
+                        (stream, index) => (
+                          <li key={index}>{stream}</li>
+                        )
+                      )}
+                    </ul>
+                  </div>
+                )}
+              {(userType === "12th" || userType === "ug") &&
+                results.final_report.career_recommendations && (
+                  <div className="p-6 bg-blue-50 rounded-lg border border-blue-200 text-blue-800">
+                    <h3 className="text-xl font-semibold mb-2">
+                      Recommended Career Paths
+                    </h3>
+                    <ul className="list-disc list-inside space-y-1">
+                      {results.final_report.career_recommendations.map(
+                        (path, index) => (
+                          <li key={index}>{path}</li>
+                        )
+                      )}
+                    </ul>
+                  </div>
+                )}
+              {/* Course Recommendations Section */}
+              {(userType === "12th" || userType === "ug") &&
+                results.final_report.course_recommendations && (
+                  <div className="p-6 bg-purple-50 rounded-lg border border-purple-200 text-purple-800">
+                    <h3 className="text-xl font-semibold mb-2">
+                      Recommended Courses
+                    </h3>
+                    <ul className="list-disc list-inside space-y-1">
+                      {results.final_report.course_recommendations.map(
+                        (course, index) => (
+                          <li key={index}>{course}</li>
+                        )
+                      )}
+                    </ul>
+                  </div>
+                )}
               <div className="p-6 bg-blue-50 rounded-lg border border-blue-200 text-blue-800">
                 <h3 className="text-xl font-semibold mb-2">
                   Analysis & Explanation
                 </h3>
                 <p>{results.final_report.explanation}</p>
               </div>
+              {/* College Recommendations Section */}
+              {(userType === "12th" || userType === "ug") &&
+                results.final_report.college_recommendations && (
+                  <div className="p-6 bg-green-50 rounded-lg border border-green-200 text-green-800">
+                    <h3 className="text-xl font-semibold mb-2">
+                      Recommended Colleges
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                      {results.final_report.college_recommendations.map(
+                        (college) => (
+                          <CollegeCard
+                            key={college.id}
+                            college={college}
+                            userType={userType}
+                          />
+                        )
+                      )}
+                    </div>
+                  </div>
+                )}
             </div>
             <button
               onClick={handleReset}

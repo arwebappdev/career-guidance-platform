@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* About Section */}
           <div>
-            <h3 className="font-bold text-lg mb-2">CareerConnect</h3>
+            <h3 className="font-bold text-lg mb-2">Paramarsh</h3>
             <p className="text-gray-400 text-sm">
               Your personal guide to a bright and successful future. Making
               career decisions simple and effective.
@@ -76,7 +76,7 @@ const Footer = () => {
         {/* Copyright Section */}
         <div className="mt-8 pt-4 border-t border-gray-700 text-center">
           <p className="text-gray-500 text-sm">
-            &copy; {new Date().getFullYear()} CareerConnect. All Rights
+            &copy; {new Date().getFullYear()} Paramarsh. All Rights
             Reserved.
           </p>
         </div>
