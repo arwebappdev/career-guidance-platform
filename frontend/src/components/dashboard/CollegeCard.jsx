@@ -2,9 +2,15 @@ import React, { useRef, useEffect } from "react";
 import { FaMapMarkerAlt, FaBook, FaRupeeSign } from "react-icons/fa";
 import { gsap } from "gsap";
 
-const CollegeCard = ({ college }) => {
+const CollegeCard = ({ college, userType }) => {
+  // Add userType prop
   const cardRef = useRef(null);
   const imgRef = useRef(null);
+
+  const coursesToShow =
+    userType === "ug"
+      ? college.courses.filter((course) => course.level === "PG")
+      : college.courses.filter((course) => course.level === "UG");
 
   useEffect(() => {
     // Hover animations
@@ -61,7 +67,7 @@ const CollegeCard = ({ college }) => {
           <FaBook className="mr-2 text-yellow-600" /> Popular Courses
         </h4>
         <div className="space-y-3">
-          {college.courses.slice(0, 3).map((course, index) => (
+          {coursesToShow.slice(0, 3).map((course, index) => (
             <div
               key={index}
               className="flex justify-between items-center text-sm bg-gray-50 p-2 rounded-lg hover:bg-yellow-50 transition-all"

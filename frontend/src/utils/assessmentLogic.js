@@ -1,3 +1,5 @@
+import { mockCollegesData } from "../data/mockCollegesData"; // Import college data
+
 const RIASEC_TRAITS = {
   R: "Realistic",
   I: "Investigative",
@@ -23,6 +25,18 @@ const recommendationsByTrait = {
       "Electrician",
       "Pilot",
     ],
+    relevant_courses: ["B.E Mechanical", "B.E Civil"],
+    course_recommendations: {
+      UG: [
+        "B.E/B.Tech in Mechanical Engineering",
+        "B.E/B.Tech in Civil Engineering",
+        "Diploma in Electrical Engineering",
+      ],
+      PG: [
+        "M.E/M.Tech in Mechanical Engineering",
+        "M.E/M.Tech in Structural Engineering",
+      ],
+    },
   },
   Investigative: {
     personality_traits: ["Analytical", "Curious", "Problem-solver"],
@@ -40,6 +54,24 @@ const recommendationsByTrait = {
       "Data Analyst",
       "Software Developer",
     ],
+    relevant_courses: [
+      "B.Sc Computer Science",
+      "B.E Computer Science",
+      "M.Sc Physics",
+      "B.Sc Mathematics",
+    ],
+    course_recommendations: {
+      UG: [
+        "MBBS",
+        "B.Sc in Physics/Chemistry/Mathematics",
+        "B.E/B.Tech in Computer Science",
+      ],
+      PG: [
+        "MD",
+        "M.Sc in Physics/Chemistry/Mathematics",
+        "M.Tech in Computer Science",
+      ],
+    },
   },
   Artistic: {
     personality_traits: ["Creative", "Imaginative", "Expressive"],
@@ -58,6 +90,19 @@ const recommendationsByTrait = {
       "Actor",
       "Architect",
     ],
+    relevant_courses: ["B.A Journalism", "B.A English", "B.A History"],
+    course_recommendations: {
+      UG: [
+        "Bachelor of Fine Arts (BFA)",
+        "B.A. in English Literature",
+        "B.Des in Graphic Design",
+      ],
+      PG: [
+        "Master of Fine Arts (MFA)",
+        "M.A. in English Literature",
+        "M.Des in Graphic Design",
+      ],
+    },
   },
   Social: {
     personality_traits: ["Helpful", "Cooperative", "Empathetic"],
@@ -75,6 +120,19 @@ const recommendationsByTrait = {
       "Nurse",
       "HR Manager",
     ],
+    relevant_courses: ["B.A Political Science", "M.A Sociology", "M.A English"],
+    course_recommendations: {
+      UG: [
+        "B.A. in Psychology",
+        "Bachelor of Social Work (BSW)",
+        "B.A. in Sociology",
+      ],
+      PG: [
+        "M.A. in Psychology",
+        "Master of Social Work (MSW)",
+        "M.A. in Sociology",
+      ],
+    },
   },
   Enterprising: {
     personality_traits: ["Ambitious", "Assertive", "Persuasive"],
@@ -92,6 +150,19 @@ const recommendationsByTrait = {
       "Lawyer",
       "Politician",
     ],
+    relevant_courses: ["MBA", "B.Com", "B.A Economics"],
+    course_recommendations: {
+      UG: [
+        "Bachelor of Business Administration (BBA)",
+        "B.Com",
+        "B.A. in Economics",
+      ],
+      PG: [
+        "Master of Business Administration (MBA)",
+        "M.Com",
+        "M.A. in Economics",
+      ],
+    },
   },
   Conventional: {
     personality_traits: ["Organized", "Efficient", "Detail-oriented"],
@@ -109,6 +180,11 @@ const recommendationsByTrait = {
       "Librarian",
       "Administrative Assistant",
     ],
+    relevant_courses: ["B.Com", "M.Com"],
+    course_recommendations: {
+      UG: ["B.Com in Accountancy", "Bachelor of Financial Markets (BFM)"],
+      PG: ["M.Com in Accountancy", "Chartered Accountant (CA)"],
+    },
   },
 };
 
@@ -159,11 +235,31 @@ export const getRecommendations = (answers, userType, assessmentQuestions) => {
 
   if (userType === "10th") {
     recommendations.career_recommendations = null;
+    recommendations.college_recommendations = null;
+    recommendations.course_recommendations = null;
   } else if (userType === "12th") {
     recommendations.academic_streams = null;
+    recommendations.college_recommendations = mockCollegesData
+      .filter((college) =>
+        college.courses.some((course) =>
+          recommendations.relevant_courses.includes(course.name)
+        )
+      )
+      .slice(0, 3);
+    recommendations.course_recommendations =
+      recommendations.course_recommendations.UG;
   } else if (userType === "ug") {
     recommendations.academic_streams = null;
     recommendations.subject_recommendations = null;
+    recommendations.college_recommendations = mockCollegesData
+      .filter((college) =>
+        college.courses.some((course) =>
+          recommendations.relevant_courses.includes(course.name)
+        )
+      )
+      .slice(0, 3);
+    recommendations.course_recommendations =
+      recommendations.course_recommendations.PG;
   }
 
   return { ...recommendations, traitScores };

@@ -6,6 +6,7 @@ import {
 } from "../data/assessmentData";
 import { analyzeAssessment } from "../utils/assessmentAnalysis";
 import Chart from "chart.js/auto";
+import CollegeCard from "../components/dashboard/CollegeCard"; // Import CollegeCard
 
 const AssessmentPage = () => {
   const [userType, setUserType] = useState(null);
@@ -353,12 +354,48 @@ const AssessmentPage = () => {
                     </ul>
                   </div>
                 )}
+              {/* Course Recommendations Section */}
+              {(userType === "12th" || userType === "ug") &&
+                results.final_report.course_recommendations && (
+                  <div className="p-6 bg-purple-50 rounded-lg border border-purple-200 text-purple-800">
+                    <h3 className="text-xl font-semibold mb-2">
+                      Recommended Courses
+                    </h3>
+                    <ul className="list-disc list-inside space-y-1">
+                      {results.final_report.course_recommendations.map(
+                        (course, index) => (
+                          <li key={index}>{course}</li>
+                        )
+                      )}
+                    </ul>
+                  </div>
+                )}
               <div className="p-6 bg-blue-50 rounded-lg border border-blue-200 text-blue-800">
                 <h3 className="text-xl font-semibold mb-2">
                   Analysis & Explanation
                 </h3>
                 <p>{results.final_report.explanation}</p>
               </div>
+              {/* College Recommendations Section */}
+              {(userType === "12th" || userType === "ug") &&
+                results.final_report.college_recommendations && (
+                  <div className="p-6 bg-green-50 rounded-lg border border-green-200 text-green-800">
+                    <h3 className="text-xl font-semibold mb-2">
+                      Recommended Colleges
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                      {results.final_report.college_recommendations.map(
+                        (college) => (
+                          <CollegeCard
+                            key={college.id}
+                            college={college}
+                            userType={userType}
+                          />
+                        )
+                      )}
+                    </div>
+                  </div>
+                )}
             </div>
             <button
               onClick={handleReset}
