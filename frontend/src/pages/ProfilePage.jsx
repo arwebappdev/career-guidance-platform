@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { auth } from '../firebase';
-import CreateProfile from './CreateProfile';
+import React, { useState, useEffect } from "react";
+import { auth } from "../firebase";
+import CreateProfile from "./CreateProfile";
+import Chatbot from "../components/common/Chatbot"; // Import the Chatbot component
 
 const ProfileDashboard = ({ profileData }) => {
   const profileCompletion = 60;
@@ -10,10 +11,14 @@ const ProfileDashboard = ({ profileData }) => {
       <div className="flex-grow container mx-auto p-4 sm:p-6 lg:p-8 flex items-center justify-center">
         <div className="w-full max-w-6xl">
           <header className="mb-6">
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">Your Profile</h1>
-            <p className="text-slate-500 mt-1">Manage your account settings and track your progress.</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">
+              Your Profile
+            </h1>
+            <p className="text-slate-500 mt-1">
+              Manage your account settings and track your progress.
+            </p>
           </header>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-1 bg-white p-6 rounded-2xl shadow-lg flex flex-col items-center text-center">
               <img
@@ -21,9 +26,13 @@ const ProfileDashboard = ({ profileData }) => {
                 alt="User Avatar"
                 className="w-24 h-24 rounded-full border-4 border-yellow-400 object-cover"
               />
-              <h2 className="text-xl font-semibold text-slate-800 mt-4">{profileData.fullName}</h2>
+              <h2 className="text-xl font-semibold text-slate-800 mt-4">
+                {profileData.fullName}
+              </h2>
               <p className="text-slate-500 text-sm">{profileData.email}</p>
-              <p className="text-xs text-slate-400 mt-2">Date of Birth: {profileData.dob}</p>
+              <p className="text-xs text-slate-400 mt-2">
+                Date of Birth: {profileData.dob}
+              </p>
               <button className="mt-4 w-full bg-yellow-500 text-white font-semibold py-2 rounded-lg hover:bg-yellow-600 transition-colors text-sm">
                 Edit Profile
               </button>
@@ -31,14 +40,26 @@ const ProfileDashboard = ({ profileData }) => {
 
             <div className="lg:col-span-2 space-y-6">
               <div className="bg-white p-6 rounded-2xl shadow-lg">
-                <h3 className="font-bold text-slate-800 mb-1">Complete Your Profile</h3>
-                <p className='text-sm text-slate-500 mb-4'>Provide more details to get personalized recommendations.</p>
+                <h3 className="font-bold text-slate-800 mb-1">
+                  Complete Your Profile
+                </h3>
+                <p className="text-sm text-slate-500 mb-4">
+                  Provide more details to get personalized recommendations.
+                </p>
                 <div className="w-full bg-slate-200 rounded-full h-2.5">
-                  <div className="bg-green-500 h-2.5 rounded-full" style={{ width: `${profileCompletion}%` }}></div>
+                  <div
+                    className="bg-green-500 h-2.5 rounded-full"
+                    style={{ width: `${profileCompletion}%` }}
+                  ></div>
                 </div>
                 <div className="flex justify-between text-xs text-slate-500 mt-2">
                   <span>{profileCompletion}% Complete</span>
-                  <a href="#" className="font-semibold text-yellow-600 hover:underline">Continue</a>
+                  <a
+                    href="#"
+                    className="font-semibold text-yellow-600 hover:underline"
+                  >
+                    Continue
+                  </a>
                 </div>
               </div>
 
@@ -59,9 +80,12 @@ const ProfileDashboard = ({ profileData }) => {
           </div>
         </div>
       </div>
+      <Chatbot /> {/* Add the Chatbot component here */}
     </div>
   );
 };
+
+// ... rest of the file remains the same
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState(null);
@@ -71,7 +95,9 @@ const ProfilePage = () => {
     setLoading(true);
     if (auth.currentUser) {
       // --- Logic Change: Check localStorage ---
-      const storedProfile = localStorage.getItem(`userProfile_${auth.currentUser.uid}`);
+      const storedProfile = localStorage.getItem(
+        `userProfile_${auth.currentUser.uid}`
+      );
       if (storedProfile) {
         setProfile(JSON.parse(storedProfile));
       } else {
@@ -86,12 +112,18 @@ const ProfilePage = () => {
   }, []);
 
   if (loading) {
-    return <div className="h-screen flex items-center justify-center">Loading Profile...</div>;
+    return (
+      <div className="h-screen flex items-center justify-center">
+        Loading Profile...
+      </div>
+    );
   }
-  
-  return profile 
-    ? <ProfileDashboard profileData={profile} /> 
-    : <CreateProfile onProfileCreated={checkProfile} />;
+
+  return profile ? (
+    <ProfileDashboard profileData={profile} />
+  ) : (
+    <CreateProfile onProfileCreated={checkProfile} />
+  );
 };
 
 export default ProfilePage;

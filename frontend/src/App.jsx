@@ -9,6 +9,8 @@ import AssessmentPage from "./pages/AssessmentPage";
 import Header from "./components/layout/Header";
 import { auth } from "./firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import ParentsDashboard from "./pages/ParentsDashboard";
+import EbookPage from "./pages/EbookPage"; // Import the new component
 
 const AboutPage = () => (
   <div className="container mx-auto p-8">
@@ -64,6 +66,9 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/assessment" element={<AssessmentPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/parents" element={<ParentsDashboard />} />
+        <Route path="/ebooks" element={<EbookPage />} />{" "}
+        {/* Add the new route */}
       </Routes>
     </>
   );

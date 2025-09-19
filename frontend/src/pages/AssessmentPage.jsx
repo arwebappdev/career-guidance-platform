@@ -58,12 +58,12 @@ const AssessmentPage = () => {
               label: "Assessment Score",
               data: results.interim_reports.map((report) => report.score),
               fill: true,
-              backgroundColor: "rgba(59, 130, 246, 0.2)",
-              borderColor: "rgba(59, 130, 246, 1)",
-              pointBackgroundColor: "rgba(59, 130, 246, 1)",
+              backgroundColor: "rgba(202, 138, 4, 0.2)",
+              borderColor: "rgba(202, 138, 4, 1)",
+              pointBackgroundColor: "rgba(202, 138, 4, 1)",
               pointBorderColor: "#fff",
               pointHoverBackgroundColor: "#fff",
-              pointHoverBorderColor: "rgba(59, 130, 246, 1)",
+              pointHoverBorderColor: "rgba(202, 138, 4, 1)",
             },
           ],
         },
@@ -231,19 +231,19 @@ const AssessmentPage = () => {
             <div className="mt-8 space-y-4">
               <button
                 onClick={() => handleUserTypeSelect("10th")}
-                className="w-full px-8 py-4 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-600 transition-colors"
+                className="w-full px-8 py-4 bg-yellow-600 text-white font-semibold rounded-full hover:bg-yellow-700 transition-colors"
               >
                 10th Class
               </button>
               <button
                 onClick={() => handleUserTypeSelect("12th")}
-                className="w-full px-8 py-4 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-600 transition-colors"
+                className="w-full px-8 py-4 bg-yellow-600 text-white font-semibold rounded-full hover:bg-yellow-700 transition-colors"
               >
                 12th Class
               </button>
               <button
                 onClick={() => handleUserTypeSelect("ug")}
-                className="w-full px-8 py-4 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-600 transition-colors"
+                className="w-full px-8 py-4 bg-yellow-600 text-white font-semibold rounded-full hover:bg-yellow-700 transition-colors"
               >
                 Undergraduate
               </button>
@@ -263,7 +263,7 @@ const AssessmentPage = () => {
             </p>
             <button
               onClick={handleStartAssessment}
-              className="mt-8 px-8 py-3 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-600 transition-colors"
+              className="mt-8 px-8 py-3 bg-yellow-600 text-white font-semibold rounded-full hover:bg-yellow-700 transition-colors"
             >
               Start Assessment
             </button>
@@ -274,7 +274,7 @@ const AssessmentPage = () => {
           <>
             <div className="progress-bar mb-1 h-2 bg-gray-200 rounded-full overflow-hidden">
               <div
-                className="progress-fill h-full bg-blue-500 transition-all duration-300"
+                className="progress-fill h-full bg-yellow-600 transition-all duration-300"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
@@ -287,7 +287,7 @@ const AssessmentPage = () => {
                   key={category}
                   className={`flex-1 text-center py-2 px-4 border-b-2 transition-colors ${
                     currentCategoryIndex === index
-                      ? "border-blue-500 text-blue-600"
+                      ? "border-yellow-600 text-yellow-700"
                       : "border-transparent text-gray-500"
                   } ${
                     index > currentCategoryIndex
@@ -306,7 +306,7 @@ const AssessmentPage = () => {
               <div className="flex justify-end mt-6">
                 <button
                   onClick={handleNext}
-                  className="px-6 py-2 bg-blue-500 text-white font-semibold rounded-full shadow-md hover:bg-blue-600 transition-colors"
+                  className="px-6 py-2 bg-yellow-600 text-white font-semibold rounded-full shadow-md hover:bg-yellow-700 transition-colors"
                 >
                   Next
                 </button>
@@ -327,7 +327,7 @@ const AssessmentPage = () => {
               <canvas ref={chartRef}></canvas>
             </div>
             <div className="space-y-6">
-              <div className="p-6 bg-blue-50 rounded-lg border border-blue-200 text-blue-800">
+              <div className="p-6 bg-yellow-50 rounded-lg border border-yellow-200 text-black">
                 <h3 className="text-xl font-semibold mb-2">
                   Key Personality Traits
                 </h3>
@@ -341,7 +341,7 @@ const AssessmentPage = () => {
               </div>
               {(userType === "10th" || userType === "12th") &&
                 results.final_report.academic_streams && (
-                  <div className="p-6 bg-blue-50 rounded-lg border border-blue-200 text-blue-800">
+                  <div className="p-6 bg-yellow-50 rounded-lg border border-yellow-200 text-black">
                     <h3 className="text-xl font-semibold mb-2">
                       Recommended Academic Streams
                     </h3>
@@ -356,7 +356,7 @@ const AssessmentPage = () => {
                 )}
               {(userType === "12th" || userType === "ug") &&
                 results.final_report.career_recommendations && (
-                  <div className="p-6 bg-blue-50 rounded-lg border border-blue-200 text-blue-800">
+                  <div className="p-6 bg-yellow-50 rounded-lg border border-yellow-200 text-black">
                     <h3 className="text-xl font-semibold mb-2">
                       Recommended Career Paths
                     </h3>
@@ -372,7 +372,7 @@ const AssessmentPage = () => {
               {/* Course Recommendations Section */}
               {(userType === "12th" || userType === "ug") &&
                 results.final_report.course_recommendations && (
-                  <div className="p-6 bg-purple-50 rounded-lg border border-purple-200 text-purple-800">
+                  <div className="p-6 bg-yellow-50 rounded-lg border border-yellow-200 text-black">
                     <h3 className="text-xl font-semibold mb-2">
                       Recommended Courses
                     </h3>
@@ -385,7 +385,7 @@ const AssessmentPage = () => {
                     </ul>
                   </div>
                 )}
-              <div className="p-6 bg-blue-50 rounded-lg border border-blue-200 text-blue-800">
+              <div className="p-6 bg-yellow-50 rounded-lg border border-yellow-200 text-black">
                 <h3 className="text-xl font-semibold mb-2">
                   Analysis & Explanation
                 </h3>
@@ -394,7 +394,7 @@ const AssessmentPage = () => {
               {/* College Recommendations Section */}
               {(userType === "12th" || userType === "ug") &&
                 results.final_report.college_recommendations && (
-                  <div className="p-6 bg-green-50 rounded-lg border border-green-200 text-green-800">
+                  <div className="p-6 bg-yellow-50 rounded-lg border border-yellow-200 text-black">
                     <h3 className="text-xl font-semibold mb-2">
                       Recommended Colleges
                     </h3>
@@ -414,7 +414,7 @@ const AssessmentPage = () => {
             </div>
             <button
               onClick={handleReset}
-              className="mt-6 w-full px-6 py-3 bg-green-500 text-white font-semibold rounded-full shadow-md hover:bg-green-600 transition-colors"
+              className="mt-6 w-full px-6 py-3 bg-yellow-600 text-white font-semibold rounded-full shadow-md hover:bg-yellow-700 transition-colors"
             >
               Start Over
             </button>

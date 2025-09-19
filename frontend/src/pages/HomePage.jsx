@@ -277,14 +277,14 @@ const HomePage = ({ user }) => {
                   about my career, but the assessment gave me clarity and
                   direction."
                 </p>
-                <p className="font-bold text-white text-right">- Sarah J.</p>
+                <p className="font-bold text-white text-right">- Atharva C.</p>
               </div>
               <div className="testimonial-card bg-yellow-600 p-8 rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300">
                 <p className="text-white mb-6 italic">
                   "The college recommendations were spot on! I found the perfect
                   university that matched my interests and academic profile."
                 </p>
-                <p className="font-bold text-white text-right">- Michael B.</p>
+                <p className="font-bold text-white text-right">- Kartik G.</p>
               </div>
               <div className="testimonial-card bg-yellow-600 p-8 rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300">
                 <p className="text-white mb-6 italic">
@@ -292,7 +292,7 @@ const HomePage = ({ user }) => {
                   future. Highly recommended!"
                 </p>
                 <br />
-                <p className="font-bold text-white text-right">- Emily R.</p>
+                <p className="font-bold text-white text-right">- Anushka S.</p>
               </div>
             </div>
           </div>

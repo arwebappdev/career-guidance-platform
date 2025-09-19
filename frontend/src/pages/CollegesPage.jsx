@@ -9,26 +9,18 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const CollegesPage = () => {
-  const [colleges, setColleges] = useState(mockCollegesData);
   const [searchTerm, setSearchTerm] = useState("");
+  const main = useRef(null);
 
-  const main = useRef(null); // A ref for the main container for context
-
-  useEffect(() => {
-    const filtered = mockCollegesData.filter(
-      (college) =>
-        college.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        college.city.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setColleges(filtered);
-  }, [searchTerm]);
+  // Correct approach: Derive filtered data directly from searchTerm
+  const filteredColleges = mockCollegesData.filter(
+    (college) =>
+      college.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      college.city.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   useEffect(() => {
-    // 1. Create a GSAP context
     const ctx = gsap.context(() => {
-      // All GSAP code goes inside here
-
-      // Hero Section Animation
       gsap.from(".hero-anim", {
         y: -50,
         opacity: 0,
@@ -36,7 +28,6 @@ const CollegesPage = () => {
         ease: "power3.out",
       });
 
-      // Search bar animation
       gsap.from(".search-anim", {
         y: 30,
         opacity: 0,
@@ -45,32 +36,28 @@ const CollegesPage = () => {
         ease: "power3.out",
       });
 
-      // Cards animation on scroll
       gsap.from(".card-anim", {
         y: 50,
         opacity: 0,
         duration: 1,
-        stagger: 0.2, // Use stagger for a cleaner effect than manual delay
+        stagger: 0.2,
         scrollTrigger: {
-          trigger: ".card-grid-anim", // Trigger based on the grid container
+          trigger: ".card-grid-anim",
           start: "top 80%",
         },
         ease: "power3.out",
       });
-    }, main); // 2. Scope the context to our main component element
+    }, main);
 
-    // 3. Return a cleanup function
-    return () => ctx.revert(); // This will clean up all animations and ScrollTriggers when the component re-renders
-  }, [colleges]); // The dependency array is correct, we just needed the cleanup
+    return () => ctx.revert();
+  }, [searchTerm]); // Now the GSAP animation runs whenever searchTerm changes
 
   return (
-    // Add the ref and a class to the main container
     <div
       ref={main}
       className="flex flex-col min-h-screen bg-gradient-to-br from-gray-50 via-white to-yellow-50"
     >
       <main className="flex-grow container mx-auto px-6 py-12">
-        {/* Add a class for GSAP to target */}
         <div className="hero-anim text-center mb-16">
           <h1 className="text-5xl md:text-6xl font-extrabold text-gray-800 drop-shadow-md">
             🎓 Explore <span className="text-yellow-600">Colleges</span>
@@ -84,7 +71,6 @@ const CollegesPage = () => {
           </p>
         </div>
 
-        {/* Add a class for GSAP to target */}
         <div className="search-anim relative mb-14 max-w-xl mx-auto">
           <input
             type="text"
@@ -96,25 +82,24 @@ const CollegesPage = () => {
           <FaSearch className="absolute top-1/2 left-5 -translate-y-1/2 text-gray-400 text-lg" />
         </div>
 
-        {/* Add a class for GSAP to target */}
         <div
           className="
-    card-grid-anim 
-    grid 
-    grid-cols-1 
-    sm:grid-cols-2 
-    md:grid-cols-2 
-    lg:grid-cols-2 
-    xl:grid-cols-3 
-    2xl:grid-cols-4
-    gap-6 
-    sm:gap-8 
-    lg:gap-10
-    place-items-center
-  "
+            card-grid-anim 
+            grid 
+            grid-cols-1 
+            sm:grid-cols-2 
+            md:grid-cols-2 
+            lg:grid-cols-2 
+            xl:grid-cols-3 
+            2xl:grid-cols-4
+            gap-6 
+            sm:gap-8 
+            lg:gap-10
+            place-items-center
+          "
         >
-          {colleges.length > 0 ? (
-            colleges.map((college) => (
+          {filteredColleges.length > 0 ? (
+            filteredColleges.map((college) => (
               <div key={college.id} className="card-anim w-full max-w-sm">
                 <CollegeCard college={college} />
               </div>

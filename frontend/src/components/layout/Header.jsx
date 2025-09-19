@@ -8,8 +8,8 @@ const Header = ({ user, onLogout }) => {
   return (
     <header className="bg-white/5 backdrop-blur-xl shadow-md w-full sticky top-0 z-50">
       <nav className="container mx-auto px-6 flex justify-between items-center">
-        <Link to="/" className="flex items-center space-x-2">
-          <img src={assets.logo1} alt="" className="w-40" />
+        <Link to="/" className="ml-6 flex items-center space-x-2">
+          <img src={assets.logo1} alt="" className="w-40 scale-[135%]" />
         </Link>
 
         <div className="hidden md:flex font-semibold items-center space-x-8">
@@ -31,11 +31,18 @@ const Header = ({ user, onLogout }) => {
           >
             Colleges
           </Link>
+
           <Link
-            to="/about"
+            to="/ebooks" // Add a link to the new page
             className="text-black hover:text-yellow-600 transition-colors duration-300"
           >
-            About
+            E-books
+          </Link>
+          <Link
+            to="/parents"
+            className="text-black hover:text-yellow-600 transition-colors duration-300"
+          >
+            Parent-Dashboard
           </Link>
         </div>
 
