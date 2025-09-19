@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { auth } from '../firebase';
 import { CheckCircle } from 'lucide-react';
 
 const CreateProfile = ({ onProfileCreated }) => {
@@ -20,12 +19,8 @@ const CreateProfile = ({ onProfileCreated }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!auth.currentUser) {
-      setError("You must be logged in to create a profile.");
-      return;
-    }
 
     for (const key in formData) {
       if (formData[key] === '') {
@@ -37,24 +32,29 @@ const CreateProfile = ({ onProfileCreated }) => {
     setIsLoading(true);
     setError('');
 
-    // --- Logic Change: Save to localStorage ---
     try {
-      const profileData = {
-        ...formData,
-        email: auth.currentUser.email,
-        uid: auth.currentUser.uid,
-      };
-      // We use the user's unique ID (uid) as the key to store their profile
-      localStorage.setItem(`userProfile_${auth.currentUser.uid}`, JSON.stringify(profileData));
-      
-      setIsSuccess(true);
-      setTimeout(() => {
-        onProfileCreated(); // This will trigger a re-render of the ProfilePage
-      }, 1500);
+      const response = await fetch('http://127.0.0.1:5000/api/profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
+      const data = await response.json();
+
+      if (response.ok) {
+        setIsSuccess(true);
+        setTimeout(() => {
+          onProfileCreated();
+        }, 1500);
+      } else {
+        setError(data.error || 'An error occurred.');
+      }
     } catch (err) {
       setError("Failed to save profile. Please try again.");
       console.error(err);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -75,7 +75,7 @@ const CreateProfile = ({ onProfileCreated }) => {
     <div className="bg-slate-50 h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-2xl bg-white p-8 rounded-2xl shadow-lg">
         <h1 className="text-3xl font-bold text-slate-800 mb-2">Create Your Profile</h1>
-        <p className="text-slate-500 mb-6">This information is saved only on this device.</p>
+        <p className="text-slate-500 mb-6">This information will be saved to your account.</p>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

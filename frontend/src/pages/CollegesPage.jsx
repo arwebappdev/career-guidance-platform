@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Footer from "../components/layout/Footer";
 import CollegeCard from "../components/dashboard/CollegeCard";
-import { mockCollegesData } from "../data/mockCollegesData";
 import { FaSearch } from "react-icons/fa";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -9,18 +8,27 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const CollegesPage = () => {
-  const [colleges, setColleges] = useState(mockCollegesData);
+  const [colleges, setColleges] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   const main = useRef(null); // A ref for the main container for context
 
   useEffect(() => {
-    const filtered = mockCollegesData.filter(
-      (college) =>
-        college.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        college.city.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setColleges(filtered);
+    const fetchColleges = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:5000/api/colleges?search=${searchTerm}`);
+        if (response.ok) {
+          const data = await response.json();
+          setColleges(data);
+        } else {
+          console.error("Failed to fetch colleges");
+        }
+      } catch (error) {
+        console.error("Error fetching colleges:", error);
+      }
+    };
+
+    fetchColleges();
   }, [searchTerm]);
 
   useEffect(() => {

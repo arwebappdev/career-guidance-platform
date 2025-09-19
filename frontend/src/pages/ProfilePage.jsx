@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { auth } from '../firebase';
 import CreateProfile from './CreateProfile';
 
 const ProfileDashboard = ({ profileData }) => {
@@ -67,18 +66,27 @@ const ProfilePage = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const checkProfile = () => {
+  const checkProfile = async () => {
     setLoading(true);
-    if (auth.currentUser) {
-      // --- Logic Change: Check localStorage ---
-      const storedProfile = localStorage.getItem(`userProfile_${auth.currentUser.uid}`);
-      if (storedProfile) {
-        setProfile(JSON.parse(storedProfile));
+    try {
+      const response = await fetch('http://127.0.0.1:5000/api/profile');
+      if (response.ok) {
+        const data = await response.json();
+        if (Object.keys(data).length > 0) {
+          setProfile(data);
+        }
+        else {
+          setProfile(null);
+        }
       } else {
         setProfile(null);
       }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+      setProfile(null);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {

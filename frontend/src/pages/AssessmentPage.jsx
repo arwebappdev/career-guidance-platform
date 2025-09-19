@@ -1,10 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  assessmentQuestions10th,
-  assessmentQuestions12th,
-  assessmentQuestionsUG,
-} from "../data/assessmentData";
-import { analyzeAssessment } from "../utils/assessmentAnalysis";
 import Chart from "chart.js/auto";
 import CollegeCard from "../components/dashboard/CollegeCard"; // Import CollegeCard
 
@@ -66,16 +60,20 @@ const AssessmentPage = () => {
     }
   }, [showResults, results]);
 
-  const handleUserTypeSelect = (type) => {
+  const handleUserTypeSelect = async (type) => {
     setUserType(type);
-    if (type === "10th") {
-      setAssessmentQuestions(assessmentQuestions10th);
-    } else if (type === "12th") {
-      setAssessmentQuestions(assessmentQuestions12th);
-    } else if (type === "ug") {
-      setAssessmentQuestions(assessmentQuestionsUG);
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/api/assessment/questions?user_type=${type}`);
+      if (response.ok) {
+        const data = await response.json();
+        setAssessmentQuestions(data);
+        setShowIntro(true);
+      } else {
+        console.error("Failed to fetch assessment questions");
+      }
+    } catch (error) {
+      console.error("Error fetching assessment questions:", error);
     }
-    setShowIntro(true);
   };
 
   const handleStartAssessment = () => {
@@ -93,7 +91,7 @@ const AssessmentPage = () => {
     setAnswers(newAnswers);
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     const currentCategory = categoryOrder[currentCategoryIndex];
     const categoryQuestions = assessmentQuestions[currentCategory];
 
@@ -103,14 +101,25 @@ const AssessmentPage = () => {
       setCurrentCategoryIndex(currentCategoryIndex + 1);
       setCurrentQuestionIndex(0);
     } else {
-      const finalResults = analyzeAssessment(
-        answers,
-        userType,
-        assessmentQuestions
-      );
-      setResults(finalResults);
-      setShowResults(true);
-      setShowAssessment(false);
+      try {
+        const response = await fetch('http://127.0.0.1:5000/api/assessment/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userType, answers }),
+        });
+        if (response.ok) {
+          const finalResults = await response.json();
+          setResults(finalResults);
+          setShowResults(true);
+          setShowAssessment(false);
+        } else {
+          console.error("Failed to submit assessment");
+        }
+      } catch (error) {
+        console.error("Error submitting assessment:", error);
+      }
     }
   };
 
@@ -127,7 +136,7 @@ const AssessmentPage = () => {
   };
 
   const renderCurrentQuestion = () => {
-    if (!showAssessment) return null;
+    if (!showAssessment || !assessmentQuestions) return null;
 
     const currentCategory = categoryOrder[currentCategoryIndex];
     const question = assessmentQuestions[currentCategory][currentQuestionIndex];
